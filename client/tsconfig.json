@@ -30,7 +30,7 @@
     "**/*.mts",
     "**/*.ts",
     "**/*.tsx"
-, "src/app/dashboard/vendor_pending/page.jsx"  ],
+, "src/app/dashboard/vendor_pending/page.jsx", "src/app/dashboard/(vendor)/product/action.js", "src/app/dashboard/(vendor)/product/page.jsx"  ],
   "exclude": [
     "node_modules"
   ]

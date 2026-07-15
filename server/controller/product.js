@@ -12,7 +12,7 @@ export const createProduct = async (req, res) => {
     // Loop through the uploaded files and upload each to Cloudinary
     const uploadPromises = req.files.map((file) => uploadToCloudinary(file.buffer));
     const imageUrls = await Promise.all(uploadPromises);
-
+    
     const newProduct = new Product({
       title,
       description,
@@ -33,9 +33,39 @@ export const createProduct = async (req, res) => {
 
 export const getAllProducts = async (req, res) => {
   try {
-    // .populate("vendorId", "name email") automatically grabs the vendor's name and email from the Users collection!
-    const products = await Product.find().populate("vendorId", "name email");
+    const products = await Product.find()
+      .select("title price description images stock category")
     return res.status(200).json(products);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const getVendorProducts = async (req, res) => {
+  try {
+    const vendorId = req.user.id;
+
+    const products = await Product.find({ vendorId }).sort({ createdAt: -1 });
+
+    return res.status(200).json(products);
+  } catch (error) {
+    console.error("Error fetching vendor products:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getProductById = async (req, res) => {
+  try {
+    const { id } = req.params; 
+    
+    const product = await Product.findById(id)
+      .populate("vendorId", "name email");
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    return res.status(200).json(product);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
