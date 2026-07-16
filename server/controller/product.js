@@ -9,7 +9,7 @@ export const createProduct = async (req, res) => {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ message: "Please upload at least one image" });
     }
-    // Loop through the uploaded files and upload each to Cloudinary
+    
     const uploadPromises = req.files.map((file) => uploadToCloudinary(file.buffer));
     const imageUrls = await Promise.all(uploadPromises);
     

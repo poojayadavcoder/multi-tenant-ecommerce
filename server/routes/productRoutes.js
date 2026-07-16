@@ -18,5 +18,4 @@ router.put("/:id", verifyToken, isVendor, upload.array("images", 5), updateProdu
 router.delete("/:id", verifyToken, isVendor, deleteProduct);
 
 
-
 export default router;
