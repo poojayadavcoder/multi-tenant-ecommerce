@@ -8,7 +8,7 @@ import { useLogout } from "../hooks/useLogout";
 const navItems = [
   {
     name: "Overview",
-    href: "/dashboard/overview",
+    href: "/dashboard/vendor/overview",
     icon: (isActive) => (
       <svg
         className={`w-5 h-5 ${isActive ? "text-slate-700" : "text-slate-400 group-hover:text-slate-500"}`}
@@ -27,7 +27,7 @@ const navItems = [
   },
   {
     name: "Products",
-    href: "/dashboard/product",
+    href: "/dashboard/vendor/product",
     icon: (isActive) => (
       <svg
         className={`w-5 h-5 ${isActive ? "text-slate-700" : "text-slate-400 group-hover:text-slate-500"}`}
@@ -46,7 +46,7 @@ const navItems = [
   },
   {
     name: "Orders",
-    href: "/dashboard/orders",
+    href: "/dashboard/vendor/orders",
     icon: (isActive) => (
       <svg
         className={`w-5 h-5 ${isActive ? "text-slate-700" : "text-slate-400 group-hover:text-slate-500"}`}
@@ -65,7 +65,7 @@ const navItems = [
   },
   {
     name: "Customers",
-    href: "/dashboard/customers",
+    href: "/dashboard/vendor/customers",
     icon: (isActive) => (
       <svg
         className={`w-5 h-5 ${isActive ? "text-slate-700" : "text-slate-400 group-hover:text-slate-500"}`}

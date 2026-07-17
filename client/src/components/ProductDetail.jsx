@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ProductsById } from "../action";
+import { ProductsById } from "../app/dashboard/customer/action"
 import { ArrowLeft } from "lucide-react";
 
 export default function ProductDetailsPage() {
@@ -89,7 +89,7 @@ export default function ProductDetailsPage() {
                 <img 
                   src={activeImage} 
                   alt={product.title} 
-                  className="w-full h-full object-contain max-h-[450px]"
+                  className="w-full h-full object-contain max-h-112.5"
                 />
               ) : (
                 <div className="text-slate-400 text-sm">No Image Available</div>

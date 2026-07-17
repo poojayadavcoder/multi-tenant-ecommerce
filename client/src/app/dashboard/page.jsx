@@ -5,10 +5,10 @@ import { redirect } from 'next/navigation';
 export default async function page() {
   const user = await getMe();
   if (user?.vendorStatus === 'approved') {
-    redirect('/dashboard/overview');
+    redirect('/dashboard/vendor/overview');
   }
-
-  return (
-    <div>page Home </div>
-  )
+    if (user?.vendorStatus === 'none' && user?.role === 'customer') {
+    redirect('/dashboard/customer');
+  }
+  
 }

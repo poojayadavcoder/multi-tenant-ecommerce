@@ -172,7 +172,7 @@ export default function ProductsPage() {
                     </button>
                   </div>
 
-                  <Link href={`/dashboard/product/${product._id}`} className="block h-full">
+                  <Link href={`/dashboard/vendor/product/${product._id}`} className="block h-full">
                     <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full">
                       <div className="relative aspect-square w-full bg-gray-50 overflow-hidden">
                         {product.images[0] ? (
