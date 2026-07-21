@@ -9,7 +9,8 @@ export default function Endpoints() {
     APPLY_VENDOR : `${BASE_URL}/api/auth/apply-vendor`,
     GET_PRODUCTS : `${BASE_URL}/api/products`,
     VENDOR_PRODUCTS : `${BASE_URL}/api/products/vendor-product`,
-    ADD_TO_CART : `${BASE_URL}/api/cart`,
+    CART_ITEMS : `${BASE_URL}/api/cart`,
+    UPDATE_CART_ITEMS : `${BASE_URL}/api/cart/update-quantity`,
 
   };
 }
