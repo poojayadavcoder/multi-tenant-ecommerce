@@ -11,6 +11,8 @@ export default function Endpoints() {
     VENDOR_PRODUCTS : `${BASE_URL}/api/products/vendor-product`,
     CART_ITEMS : `${BASE_URL}/api/cart`,
     UPDATE_CART_ITEMS : `${BASE_URL}/api/cart/update-quantity`,
-
+    ORDER_CHECKOUT : `${BASE_URL}/api/orders/checkout`,
+    CUSTOMER_ORDER : `${BASE_URL}/api/orders/customer/orders`,
+    VENDOR_ORDER : `${BASE_URL}/api/orders/vendor/orders`
   };
 }

@@ -172,3 +172,100 @@ export async function DeleteCart(productId) {
     return { success: false, error: "Failed to remove item." };
   }
 }
+
+export async function CheckoutOrder(shippingAddress) {
+
+  const endpoint = Endpoints();
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('accessToken')?.value;
+
+     const headers = {
+      "Content-Type": "application/json",
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`; 
+    }
+
+    const response = await fetch(`${endpoint.ORDER_CHECKOUT}`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({ shippingAddress })
+    });
+
+    const data = await response.json();
+    if (!response.ok) return { success: false, error: data.message };
+
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: "Failed to checkout order." };
+  }
+}
+
+
+export async function GetOrderForCustomer() {
+  const endpoint = Endpoints()
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('accessToken')?.value;
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`; 
+    }
+   const response = await fetch(`${endpoint.CUSTOMER_ORDER}`,{
+    method : "GET",
+    headers: headers,
+   })
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return { success: false, error: data.message || 'Product is not got.' };
+    }
+
+    return { success: true, product: data.product || data };
+
+  }
+  catch (error) {
+    console.error("Server Action login Error:", error);
+    return { success: false, error: 'Internal server error. Please try again.' };
+  }
+}
+
+export async function GetOrderForVendor() {
+  const endpoint = Endpoints()
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('accessToken')?.value;
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`; 
+    }
+   const response = await fetch(`${endpoint.VENDOR_ORDER}`,{
+    method : "GET",
+    headers: headers,
+   })
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return { success: false, error: data.message || 'Product is not got.' };
+    }
+
+    return { success: true, product: data.product || data };
+
+  }
+  catch (error) {
+    console.error("Server Action login Error:", error);
+    return { success: false, error: 'Internal server error. Please try again.' };
+  }
+}
+
+

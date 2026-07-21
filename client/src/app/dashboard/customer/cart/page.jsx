@@ -1,21 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { GetCart, UpdateCart, DeleteCart } from "../action";
+import CheckoutModal from "../../../../components/customer/CheckoutModal";
+
 
 export default function CartPage() {
+  const router = useRouter();
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
 
   const fetchCartData = async () => {
     try {
       setLoading(true);
       const res = await GetCart();
-      console.log(res.product.items)
-      if (res.success) {
-        setCart(res.product.items);
+      if (res?.success) {
+        setCart(res.product?.items || []);
       }
     } catch (err) {
       console.error("Error loading cart:", err);
@@ -37,10 +41,10 @@ export default function CartPage() {
 
     setUpdatingId(productId);
     const res = await UpdateCart(productId, targetQty);
-    if (res.success) {
+    if (res?.success) {
       await fetchCartData();
     } else {
-      alert(res.error || "Could not update quantity.");
+      alert(res?.error || "Could not update quantity.");
     }
     setUpdatingId(null);
   };
@@ -50,22 +54,24 @@ export default function CartPage() {
     
     setUpdatingId(productId);
     const res = await DeleteCart(productId);
-    if (res.success) {
+    if (res?.success) {
       await fetchCartData();
     } else {
-      alert(res.error || "Could not remove item.");
+      alert(res?.error || "Could not remove item.");
     }
     setUpdatingId(null);
   };
 
   const items = cart || [];
-  console.log(cart)
 
+  // Calculate Subtotal & Total Quantities
   const subtotal = items.reduce((acc, item) => {
     const price = item.productId?.price || 0;
     return acc + price * item.quantity;
   }, 0);
-  
+
+  const totalQuantity = items.reduce((acc, item) => acc + item.quantity, 0);
+
   const shippingFee = subtotal > 500 || subtotal === 0 ? 0 : 50;
   const orderTotal = subtotal + shippingFee;
 
@@ -106,6 +112,7 @@ export default function CartPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
+        {/* Cart Items List */}
         <div className="lg:col-span-8 space-y-6">
           {items.map((item) => {
             const product = item.productId;
@@ -120,7 +127,6 @@ export default function CartPage() {
                   isItemUpdating ? "opacity-50 pointer-events-none" : ""
                 }`}
               >
-
                 <div className="w-24 h-28 md:w-28 md:h-32 bg-neutral-50 rounded-lg overflow-hidden border border-neutral-100 shrink-0">
                   <img 
                     src={product.images?.[0]} 
@@ -145,7 +151,7 @@ export default function CartPage() {
                         </svg>
                       </button>
                     </div>
-                    <h3 className="text-sm md:text-base font-bold text-neutral-850 line-clamp-2 mt-0.5">
+                    <h3 className="text-sm md:text-base font-bold text-neutral-800 line-clamp-2 mt-0.5">
                       {product.title}
                     </h3>
                   </div>
@@ -184,13 +190,14 @@ export default function CartPage() {
           })}
         </div>
 
+        {/* Sidebar Order Summary */}
         <div className="lg:col-span-4">
           <div className="bg-neutral-50 rounded-2xl border border-neutral-150 p-6 sticky top-24">
             <h2 className="text-lg font-bold text-neutral-900 mb-5">Order Summary</h2>
 
             <div className="space-y-4 text-sm text-neutral-600 border-b border-neutral-200 pb-5">
               <div className="flex justify-between">
-                <span>Subtotal ({items.length} items)</span>
+                <span>Subtotal ({totalQuantity} items)</span>
                 <span className="font-semibold text-neutral-900">₹{subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
@@ -210,20 +217,37 @@ export default function CartPage() {
 
             {subtotal < 500 && (
               <p className="text-[11px] text-neutral-500 mb-5 text-center leading-relaxed">
-                Add <span className="font-bold text-emerald-600">₹{(500 - subtotal).toFixed(2)}</span> more to unlock **Free Shipping**!
+                Add <span className="font-bold text-emerald-600">₹{(500 - subtotal).toFixed(2)}</span> more to unlock <span className="font-bold text-emerald-600">Free Shipping</span>!
               </p>
             )}
 
-            <Link 
-              href="/dashboard/customer/checkout"
-              className="w-full bg-[#00b574] hover:bg-[#009e65] text-white font-semibold py-3.5 rounded-xl transition text-center block text-sm shadow-xs select-none"
+            <button
+              className="w-full bg-[#00b574] hover:bg-[#009e65] text-white font-semibold py-3.5 rounded-xl transition text-center block text-sm shadow-xs select-none cursor-pointer"
+              onClick={() => setShowPopup(true)}
             >
               Proceed to Checkout
-            </Link>
+            </button>
           </div>
         </div>
 
       </div>
+
+      {showPopup && (
+        <CheckoutModal
+          isOpen={showPopup}
+          onClose={() => setShowPopup(false)}
+          cartData={{
+            subtotal,
+            shippingFee,
+            total: orderTotal,
+            itemCount: totalQuantity
+          }}
+          onSuccess={() => {
+            setShowPopup(false);
+            router.push('/dashboard/customer/order');
+          }}
+        />
+      )}
     </div>
   );
 }
