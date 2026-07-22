@@ -1,4 +1,4 @@
-import Cart from "../models/Cart.js";
+  import Cart from "../models/Cart.js";
 import Order from "../models/Order.js";
 import Product from "../models/Product.js";
 export const checkout = async (req, res) => {

@@ -1,5 +1,3 @@
-
-
 import Link from 'next/link';
 
 function Logo() {
@@ -55,10 +53,10 @@ export default function Header() {
             Collections
           </Link>
           <Link 
-            href="#" 
+            href="/dashboard/customer/order" 
             className="text-neutral-500 hover:text-neutral-950 font-medium text-sm transition-colors duration-200"
           >
-            Archive
+            Orders
           </Link>
            <div className="flex items-center gap-6">
           

@@ -7,6 +7,7 @@ import productRoutes from "./routes/productRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js"
+import paymentRoutes from "./routes/paymentRoutes.js"
 import connectDB from "./config/db.js";
 
 const app = express();
@@ -17,7 +18,6 @@ connectDB();
 app.use(express.json());
 app.use(cookieParser());
 
-// Request logger (development only)
 if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
@@ -27,6 +27,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/cart",cartRoutes)
 app.use("/api/orders",orderRoutes)
+app.use("/api/payment", paymentRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
