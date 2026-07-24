@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckoutOrder } from '../../app/dashboard/customer/action';
+import { CreateOrder, VerifyOrder } from '../../app/dashboard/customer/action';
 
 export default function CheckoutModal({ isOpen, onClose, cartData, onSuccess }) {
   const router = useRouter();
@@ -12,7 +12,7 @@ export default function CheckoutModal({ isOpen, onClose, cartData, onSuccess }) 
 
   if (!isOpen) return null;
 
-  const subtotal = cartData?.subtotal || 1099.94;
+  const subtotal = cartData?.subtotal || 0;
   const shippingFee = cartData?.shippingFee || 0;
   const total = cartData?.total || subtotal + shippingFee;
   const itemCount = cartData?.itemCount || 0;
@@ -25,17 +25,61 @@ export default function CheckoutModal({ isOpen, onClose, cartData, onSuccess }) 
     setLoading(true);
 
     try {
-      const result = await CheckoutOrder(shippingAddress);
-
-      if (result.success) {
-        onSuccess?.();
-        router.push('/dashboard/customer/order');
-      } else {
-        setErrorMessage(result.error || 'Failed to place order. Please try again.');
+      if (typeof window === 'undefined' || !window.Razorpay) {
+        setErrorMessage('Razorpay SDK failed to load. Please refresh the page and try again.');
+        setLoading(false);
+        return;
       }
+
+      const orderInit = await CreateOrder(total); 
+
+      if (!orderInit?.success || !orderInit?.order) {
+        setErrorMessage(orderInit?.error || 'Failed to initiate payment.');
+        setLoading(false);
+        return;
+      }
+
+      const options = {
+        key: orderInit.keyId || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: orderInit.order.amount,
+        currency: orderInit.order.currency,
+        name: "Zoka Shop",
+        description: "Complete your order purchase",
+        order_id: orderInit.order.id,
+
+        handler: async function (response) {
+
+          const result = await VerifyOrder({
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            shippingAddress: shippingAddress,
+          });
+
+          if (result.success) {
+            onSuccess?.();
+            router.push('/dashboard/customer/order');
+          } else {
+            setErrorMessage(result.error || 'Payment verification failed.');
+            setLoading(false);
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            setLoading(false);
+          }
+        },
+        theme: {
+          color: '#00B976',
+        },
+      };
+
+      const paymentWindow = new window.Razorpay(options);
+      paymentWindow.open();
+
     } catch (err) {
+      console.error(err);
       setErrorMessage('An unexpected error occurred. Please try again.');
-    } finally {
       setLoading(false);
     }
   };
@@ -46,7 +90,6 @@ export default function CheckoutModal({ isOpen, onClose, cartData, onSuccess }) 
         className="bg-white rounded-2xl border border-slate-100 shadow-xl max-w-lg w-full overflow-hidden relative"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div className="p-6 pb-4 border-b border-slate-100 flex justify-between items-center">
           <div>
             <h2 className="text-xl font-bold text-slate-900">Complete Your Order</h2>
@@ -61,14 +104,12 @@ export default function CheckoutModal({ isOpen, onClose, cartData, onSuccess }) 
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {/* Error Banner */}
           {errorMessage && (
             <div className="p-3 bg-red-50 text-red-600 text-xs rounded-lg border border-red-100">
               {errorMessage}
             </div>
           )}
 
-          {/* Shipping Address Input */}
           <div>
             <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
               Shipping Address <span className="text-red-500">*</span>
@@ -83,7 +124,6 @@ export default function CheckoutModal({ isOpen, onClose, cartData, onSuccess }) 
             />
           </div>
 
-          {/* Mini Order Summary */}
           <div className="bg-slate-50 p-4 rounded-xl space-y-2 text-xs text-slate-600 border border-slate-100">
             <div className="flex justify-between items-center">
               <span>Subtotal ({itemCount} items)</span>
@@ -103,7 +143,6 @@ export default function CheckoutModal({ isOpen, onClose, cartData, onSuccess }) 
             </div>
           </div>
 
-          {/* Actions */}
           <div className="flex gap-3">
             <button
               type="button"

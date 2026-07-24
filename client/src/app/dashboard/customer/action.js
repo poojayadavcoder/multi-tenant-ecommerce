@@ -268,4 +268,74 @@ export async function GetOrderForVendor() {
   }
 }
 
+export async function CreateOrder(amountPayload) {
+  const endpoint = Endpoints();
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('accessToken')?.value;
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`; 
+    }
+  
+    const amount = typeof amountPayload === 'object' 
+      ? (amountPayload?.amount || amountPayload?.payload) 
+      : amountPayload;
+
+    const response = await fetch(`${endpoint.CREATE_ORDER}`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({ amount })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return { success: false, error: data.message || 'Failed to initiate payment.' };
+    }
+
+    return { success: true, order: data.order, keyId: data.keyId };
+  } catch (error) {
+    console.error("Server Action CreateOrder Error:", error);
+    return { success: false, error: 'Internal server error. Please try again.' };
+  }
+}
+
+export async function VerifyOrder(paymentData) {
+  const endpoint = Endpoints();
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('accessToken')?.value;
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`; 
+    }
+
+    const payload = paymentData?.orderPayload || paymentData;
+
+    const response = await fetch(`${endpoint.VERIFY_PAYMENT}`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(payload)
+    });
+
+    const resultData = await response.json();
+
+    if (!response.ok) {
+      return { success: false, error: resultData.message || 'Order verification failed.' };
+    }
+
+    return { success: true, ...resultData };
+  } catch (error) {
+    console.error("Server Action VerifyOrder Error:", error);
+    return { success: false, error: 'Internal server error. Please try again.' };
+  }
+}
+
 
