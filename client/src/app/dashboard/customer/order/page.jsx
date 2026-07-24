@@ -214,7 +214,7 @@ export default function OrdersPage() {
                 })}
               </div>
 
-              {/* Order Footer */}
+            
               <div className="bg-neutral-50/40 px-4 sm:px-6 py-3.5 border-t border-neutral-100 flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs gap-2">
                 <div className="flex items-center gap-2 text-neutral-600">
                   <svg className="w-4 h-4 text-neutral-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

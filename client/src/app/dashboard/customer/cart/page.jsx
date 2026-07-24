@@ -64,7 +64,6 @@ export default function CartPage() {
 
   const items = cart || [];
 
-  // Calculate Subtotal & Total Quantities
   const subtotal = items.reduce((acc, item) => {
     const price = item.productId?.price || 0;
     return acc + price * item.quantity;
@@ -112,7 +111,6 @@ export default function CartPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        {/* Cart Items List */}
         <div className="lg:col-span-8 space-y-6">
           {items.map((item) => {
             const product = item.productId;
@@ -190,7 +188,6 @@ export default function CartPage() {
           })}
         </div>
 
-        {/* Sidebar Order Summary */}
         <div className="lg:col-span-4">
           <div className="bg-neutral-50 rounded-2xl border border-neutral-150 p-6 sticky top-24">
             <h2 className="text-lg font-bold text-neutral-900 mb-5">Order Summary</h2>

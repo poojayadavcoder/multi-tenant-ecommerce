@@ -24,6 +24,7 @@ export const createPaymentOrder = async (req, res) => {
     };
 
     const order = await razorpay.orders.create(options);
+    console.log(order)
     res.status(200).json({
       success: true,
       order,
@@ -53,7 +54,6 @@ export const verifyPayment = async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid payment signature" });
     }
 
-    // Fetch user cart
     const cart = await Cart.findOne({ userId: req.user.id }).populate("items.productId");
     
     let orderItems = [];
@@ -92,7 +92,6 @@ export const verifyPayment = async (req, res) => {
       },
     });
 
-    // Update stock for purchased products
     for (const item of orderItems) {
       if (item.productId) {
         await Product.findByIdAndUpdate(item.productId, {
@@ -101,7 +100,6 @@ export const verifyPayment = async (req, res) => {
       }
     }
 
-    // Clear cart
     if (cart) {
       cart.items = [];
       await cart.save();

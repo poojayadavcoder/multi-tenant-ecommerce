@@ -32,6 +32,7 @@ export default function CheckoutModal({ isOpen, onClose, cartData, onSuccess }) 
       }
 
       const orderInit = await CreateOrder(total); 
+      console.log(orderInit)
 
       if (!orderInit?.success || !orderInit?.order) {
         setErrorMessage(orderInit?.error || 'Failed to initiate payment.');
