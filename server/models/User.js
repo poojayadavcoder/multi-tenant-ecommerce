@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["customer", "vendor", "admin"],
+      enum: ["customer", "vendor","delivery","admin"],
       default: "customer",
     },
     shopDetails: {
@@ -37,6 +37,8 @@ const userSchema = new mongoose.Schema(
       enum: ["none", "pending", "approved", "rejected"],
       default: "none",
     },
+    vehicleNumber: { type: String, default: "" },
+    isAvailable: { type: Boolean, default: true },
   },
   {
     timestamps: true,

@@ -15,6 +15,7 @@ export default function Endpoints() {
     CUSTOMER_ORDER : `${BASE_URL}/api/orders/customer/orders`,
     VENDOR_ORDER : `${BASE_URL}/api/orders/vendor/orders`,
     CREATE_ORDER : `${BASE_URL}/api/payment/create-order`,
-    VERIFY_PAYMENT : `${BASE_URL}/api/payment/verify`
+    VERIFY_PAYMENT : `${BASE_URL}/api/payment/verify`,
+
   };
 }
