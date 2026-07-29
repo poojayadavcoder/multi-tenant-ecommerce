@@ -1,4 +1,5 @@
 import User from "../models/User";
+import Order from "../models/Order";
 
 export const getDeliveryPartners = async (req, res) => {
   try {
@@ -18,16 +19,36 @@ export const getDeliveryPartners = async (req, res) => {
     res.status(200).json({ success: true, drivers });
   } catch (error) {
     console.error("Error fetching delivery partners:", error);
-    res.status(500).json({ success: false, message: "Could not fetch delivery partners" });
+    res
+      .status(500)
+      .json({ success: false, message: "Could not fetch delivery partners" });
   }
 };
 
-export const assignDeliveryPartner = async(req,res)=>{
-    try {
-       const {orderId , }
+export const assignDeliveryPartner = async (req, res) => {
+  try {
+    const { orderId, deliveryPartnerId } = req.body;
+
+    if (!orderId || !deliveryPartnerId) {
+      return res.status(400).json({ success: false, message: "Order ID and Delivery Partner ID are required" });
     }
-    catch(error){
-     console.error("Error asigning delivery partners:", error);
-     res.status(500).json({ success: false, message: "Could not asign delivery partners" });
-    }
-}
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+      orderId,
+      {
+        deliveryPartnerId,
+        status: "Ready_for_Pickup",
+      },
+      { new: true }
+    );
+
+    res.status(200).json({ 
+      success: true, 
+      message: "Delivery partner assigned successfully!", 
+      order: updatedOrder 
+    });
+  } catch (error) {
+    console.error("Error assigning delivery partner:", error);
+    res.status(500).json({ success: false, message: "Failed to assign delivery partner" });
+  }
+};
