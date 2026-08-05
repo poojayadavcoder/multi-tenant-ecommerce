@@ -1,5 +1,59 @@
-import User from "../models/User";
-import Order from "../models/Order";
+import User from "../models/User.js";
+import Order from "../models/Order.js";
+
+export const applyForDeliveryPartner = async (req, res) => {
+ try {
+  const userId = req.user.id
+  const {vehicle_type, vehicle_number, license_number} = req.body
+
+  const user =await User.findById(userId)
+
+  if(!user){
+    return res.status(404).json("User not found")
+  }
+
+   if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (user.role === "delivery") {
+      return res.status(400).json({
+        success: false,
+        message: "User is already registered as a delivery partner",
+      });
+    }
+
+  user.role = "delivery"
+  user.isAvailable = true
+
+  if (vehicle_type) user.vehicleType = vehicle_type;
+  if (vehicle_number) user.vehicleNumber = vehicle_number;
+  if (license_number) user.licenseNumber = license_number;
+
+  await user.save()
+
+  return res.status(200).json({
+    success:true,
+    message : "Sucessfully applied for delivery person",
+    user :{
+      id : user.id,
+      name : user.name,
+      email :user.email,
+      role :user.role ,
+      is_available :user.is_available
+    }
+  })
+}
+  catch (error) {
+    return res.status(500).json({ 
+      message: "Server error applying for delivery role", 
+      error: error.message 
+    });
+  }
+}
 
 export const getDeliveryPartners = async (req, res) => {
   try {

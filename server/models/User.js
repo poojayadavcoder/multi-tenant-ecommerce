@@ -37,8 +37,15 @@ const userSchema = new mongoose.Schema(
       enum: ["none", "pending", "approved", "rejected"],
       default: "none",
     },
-    vehicleNumber: { type: String, default: "" },
+    vehicleType:{
+      type: String,
+      enum: ["bike", "car", "van", "truck"],
+      default: null,
+    },
+    licenseNumber: { type: String, default: null },
+    vehicleNumber: { type: String, default: null},
     isAvailable: { type: Boolean, default: true },
+
   },
   {
     timestamps: true,

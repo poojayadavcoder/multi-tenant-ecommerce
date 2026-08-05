@@ -8,6 +8,7 @@ import cartRoutes from "./routes/cartRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js"
 import paymentRoutes from "./routes/paymentRoutes.js"
+import deliveryRoutes from "./routes/deliveryRoutes.js"
 import connectDB from "./config/db.js";
 
 const app = express();
@@ -28,6 +29,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/cart",cartRoutes)
 app.use("/api/orders",orderRoutes)
 app.use("/api/payment", paymentRoutes);
+app.use("/api/deliveries", deliveryRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
