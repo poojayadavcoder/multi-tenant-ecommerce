@@ -7,6 +7,7 @@ export async function VendorProducts() {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get('accessToken')?.value;
+    console.log(token)
 
     const headers = {
       'Content-Type': 'application/json',

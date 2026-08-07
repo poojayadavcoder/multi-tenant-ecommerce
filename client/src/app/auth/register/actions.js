@@ -37,7 +37,7 @@ export async function registerUser(values) {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 15 * 60, 
+        maxAge: 60, 
         path: '/',
       });
     }
