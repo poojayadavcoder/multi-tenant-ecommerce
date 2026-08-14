@@ -4,10 +4,10 @@ import { redirect } from 'next/navigation';
 
 export default async function page() {
   const user = await getMe();
-  if (user?.vendorStatus === 'approved') {
+  if (user?.status === 'approved') {
     redirect('/dashboard/vendor/overview');
   }
-    if (user?.vendorStatus === 'none' && user?.role === 'customer') {
+    if (user?.status === 'none' && user?.role === 'customer') {
     redirect('/dashboard/customer');
   }
   

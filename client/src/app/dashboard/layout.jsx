@@ -8,7 +8,7 @@ export default async function Layout({ children }) {
   if (!user) {
     redirect('/auth/login');
   }
-  if (user?.vendorStatus === 'pending') {
+  if (user?.status === 'pending') {
     return <VendorPendingScreen />;
   }
   

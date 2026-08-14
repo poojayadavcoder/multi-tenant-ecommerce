@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
       shopName: { type: String, trim: true },
       shopDescription: { type: String },
     },
-    vendorStatus: {
+    status: {
       type: String,
       enum: ["none", "pending", "approved", "rejected"],
       default: "none",
@@ -42,6 +42,7 @@ const userSchema = new mongoose.Schema(
       enum: ["bike", "car", "van", "truck"],
       default: null,
     },
+    is_available :{type : Boolean},
     licenseNumber: { type: String, default: null },
     vehicleNumber: { type: String, default: null},
     isAvailable: { type: Boolean, default: true },

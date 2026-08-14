@@ -158,7 +158,7 @@ const apply_vendor=async(req,res)=>{
       shopName,
       shopDescription
     };
-    user.vendorStatus = "pending";
+    user.status = "pending";
 
     await user.save();
 

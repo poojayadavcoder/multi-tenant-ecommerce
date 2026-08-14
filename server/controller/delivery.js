@@ -28,6 +28,7 @@ export const applyForDeliveryPartner = async (req, res) => {
 
   user.role = "delivery"
   user.isAvailable = true
+  user.status = "pending"
 
   if (vehicle_type) user.vehicleType = vehicle_type;
   if (vehicle_number) user.vehicleNumber = vehicle_number;
