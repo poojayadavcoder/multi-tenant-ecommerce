@@ -6,7 +6,6 @@ import Link from "next/link";
 import { GetCart, UpdateCart, DeleteCart } from "../action";
 import CheckoutModal from "../../../../components/customer/CheckoutModal";
 
-
 export default function CartPage() {
   const router = useRouter();
   const [cart, setCart] = useState(null);
