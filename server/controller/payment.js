@@ -11,11 +11,9 @@ const razorpay = new Razorpay({
 
 export const createPaymentOrder = async (req, res) => {
   try {
-    const { amount } = req.body;
-
-    if (!amount || isNaN(amount) || amount <= 0) {
-      return res.status(400).json({ success: false, message: "Invalid amount specified" });
-    }
+    const { shippingFee ,cartData } = req.body;
+    console.log(shippingFee)
+    console.log(cartData)
 
     const options = {
       amount: Math.round(amount * 100),

@@ -1,341 +1,142 @@
-"use server"
-import { cookies } from "next/headers";
+"use server";
+
 import Endpoints from "../../../constant/apiRoutes";
+import { request } from "../../../controller/RequestController.server";
 
 export async function Products() {
   const endpoint = Endpoints();
-  try {
-    const response = await fetch(`${endpoint.GET_PRODUCTS}`, {
-      method: 'GET',
-    });
+  const result = await request(endpoint.GET_PRODUCTS, "GET");
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      return { success: false, error: data.message || 'Product is not geting.' };
-    }
-
-    return { success: true, product: data.product || data };
-    
-  } catch (error) {
-    console.error("Server Action login Error:", error);
-    return { success: false, error: 'Internal server error. Please try again.' };
+  if (!result.success) {
+    return { success: false, error: result.error || "Product is not getting." };
   }
+
+  return { success: true, product: result.data?.product || result.data };
 }
 
 export async function ProductsById(id) {
   const endpoint = Endpoints();
-  try {
-    const response = await fetch(`${endpoint.GET_PRODUCTS}/${id}`, {
-      method: 'GET',
-    });
+  const result = await request(`${endpoint.GET_PRODUCTS}/${id}`, "GET");
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      return { success: false, error: data.message || 'Product is not geting.' };
-    }
-
-    return { success: true, product: data.product || data };
-    
-  } catch (error) {
-    console.error("Server Action login Error:", error);
-    return { success: false, error: 'Internal server error. Please try again.' };
+  if (!result.success) {
+    return { success: false, error: result.error || "Product is not getting." };
   }
+
+  return { success: true, product: result.data?.product || result.data };
 }
 
 export async function AddToCart(productId, quantity) {
-  const endpoint = Endpoints()
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('accessToken')?.value;
-    const headers = {
-      "Content-Type": "application/json",
-    };
+  const endpoint = Endpoints();
+  const result = await request(endpoint.CART_ITEMS, "POST", {
+    body: { productId, quantity },
+  });
 
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`; 
-    }
-   const response = await fetch(`${endpoint.CART_ITEMS}`,{
-    method : "POST",
-    headers: headers,
-    body : JSON.stringify({
-        productId: productId,
-        quantity: quantity
-      })
-   })
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return { success: false, error: data.message || 'Product is not updated.' };
-    }
-
-    return { success: true, product: data.product || data };
-
+  if (!result.success) {
+    return { success: false, error: result.error || "Product is not updated." };
   }
-  catch (error) {
-    console.error("Server Action login Error:", error);
-    return { success: false, error: 'Internal server error. Please try again.' };
-  }
+
+  return { success: true, product: result.data?.product || result.data };
 }
 
 export async function GetCart() {
-  const endpoint = Endpoints()
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('accessToken')?.value;
-    const headers = {
-      "Content-Type": "application/json",
-    };
+  const endpoint = Endpoints();
+  const result = await request(endpoint.CART_ITEMS, "GET");
 
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`; 
-    }
-   const response = await fetch(`${endpoint.CART_ITEMS}`,{
-    method : "GET",
-    headers: headers,
-   })
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return { success: false, error: data.message || 'Product is not got.' };
-    }
-
-    return { success: true, product: data.product || data };
-
+  if (!result.success) {
+    return { success: false, error: result.error || "Product is not got." };
   }
-  catch (error) {
-    console.error("Server Action login Error:", error);
-    return { success: false, error: 'Internal server error. Please try again.' };
-  }
+
+  return { success: true, product: result.data?.product || result.data };
 }
 
-
 export async function UpdateCart(productId, quantity) {
-
   const endpoint = Endpoints();
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('accessToken')?.value;
+  const result = await request(`${endpoint.UPDATE_CART_ITEMS}/${productId}`, "PUT", {
+    body: { productId, quantity },
+  });
 
-     const headers = {
-      "Content-Type": "application/json",
-    };
-
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`; 
-    }
-
-    const response = await fetch(`${endpoint.UPDATE_CART_ITEMS}/${productId}`, {
-      method: "PUT", 
-      headers: headers,
-      body: JSON.stringify({ productId, quantity })
-    });
-
-    const data = await response.json();
-    if (!response.ok) return { success: false, error: data.message };
-
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: "Failed to update quantity." };
+  if (!result.success) {
+    return { success: false, error: result.error || "Failed to update quantity." };
   }
+
+  return { success: true };
 }
 
 export async function DeleteCart(productId) {
-
   const endpoint = Endpoints();
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('accessToken')?.value;
+  const result = await request(`${endpoint.CART_ITEMS}/${productId}`, "DELETE");
 
-     const headers = {
-      "Content-Type": "application/json",
-    };
-
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`; 
-    }
-
-    const response = await fetch(`${endpoint.CART_ITEMS}/${productId}`, {
-      method: "DELETE",
-      headers: headers,
-      // body: JSON.stringify({ productId })
-    });
-
-    const data = await response.json();
-    if (!response.ok) return { success: false, error: data.message };
-
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: "Failed to remove item." };
+  if (!result.success) {
+    return { success: false, error: result.error || "Failed to remove item." };
   }
+
+  return { success: true };
 }
 
 export async function CheckoutOrder(shippingAddress) {
-
   const endpoint = Endpoints();
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('accessToken')?.value;
+  const result = await request(endpoint.ORDER_CHECKOUT, "POST", {
+    body: { shippingAddress },
+  });
 
-     const headers = {
-      "Content-Type": "application/json",
-    };
-
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`; 
-    }
-
-    const response = await fetch(`${endpoint.ORDER_CHECKOUT}`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({ shippingAddress })
-    });
-
-    const data = await response.json();
-    if (!response.ok) return { success: false, error: data.message };
-
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: "Failed to checkout order." };
+  if (!result.success) {
+    return { success: false, error: result.error || "Failed to checkout order." };
   }
+
+  return { success: true };
 }
 
-
 export async function GetOrderForCustomer() {
-  const endpoint = Endpoints()
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('accessToken')?.value;
-    const headers = {
-      "Content-Type": "application/json",
-    };
+  const endpoint = Endpoints();
+  const result = await request(endpoint.CUSTOMER_ORDER, "GET");
 
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`; 
-    }
-   const response = await fetch(`${endpoint.CUSTOMER_ORDER}`,{
-    method : "GET",
-    headers: headers,
-   })
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return { success: false, error: data.message || 'Product is not got.' };
-    }
-
-    return { success: true, product: data.product || data };
-
+  if (!result.success) {
+    return { success: false, error: result.error || "Product is not got." };
   }
-  catch (error) {
-    console.error("Server Action login Error:", error);
-    return { success: false, error: 'Internal server error. Please try again.' };
-  }
+
+  return { success: true, product: result.data?.product || result.data };
 }
 
 export async function GetOrderForVendor() {
-  const endpoint = Endpoints()
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('accessToken')?.value;
-    const headers = {
-      "Content-Type": "application/json",
-    };
+  const endpoint = Endpoints();
+  const result = await request(endpoint.VENDOR_ORDER, "GET");
 
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`; 
-    }
-   const response = await fetch(`${endpoint.VENDOR_ORDER}`,{
-    method : "GET",
-    headers: headers,
-   })
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return { success: false, error: data.message || 'Product is not got.' };
-    }
-
-    return { success: true, product: data.product || data };
-
+  if (!result.success) {
+    return { success: false, error: result.error || "Product is not got." };
   }
-  catch (error) {
-    console.error("Server Action login Error:", error);
-    return { success: false, error: 'Internal server error. Please try again.' };
-  }
+
+  return { success: true, product: result.data?.product || result.data };
 }
 
 export async function CreateOrder(amountPayload) {
   const endpoint = Endpoints();
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('accessToken')?.value;
-    const headers = {
-      "Content-Type": "application/json",
-    };
-
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`; 
-    }
-  
-    const amount = typeof amountPayload === 'object' 
-      ? (amountPayload?.amount || amountPayload?.payload) 
+  const amount =
+    typeof amountPayload === "object"
+      ? amountPayload?.amount || amountPayload?.payload
       : amountPayload;
 
-    const response = await fetch(`${endpoint.CREATE_ORDER}`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({ amount })
-    });
+  const result = await request(endpoint.CREATE_ORDER, "POST", {
+    body: { amount },
+  });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      return { success: false, error: data.message || 'Failed to initiate payment.' };
-    }
-
-    return { success: true, order: data.order, keyId: data.keyId };
-  } catch (error) {
-    console.error("Server Action CreateOrder Error:", error);
-    return { success: false, error: 'Internal server error. Please try again.' };
+  if (!result.success) {
+    return { success: false, error: result.error || "Failed to initiate payment." };
   }
+
+  return { success: true, order: result.data?.order, keyId: result.data?.keyId };
 }
 
 export async function VerifyOrder(paymentData) {
   const endpoint = Endpoints();
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('accessToken')?.value;
-    const headers = {
-      "Content-Type": "application/json",
-    };
+  const payload = paymentData?.orderPayload || paymentData;
 
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`; 
-    }
+  const result = await request(endpoint.VERIFY_PAYMENT, "POST", {
+    body: payload,
+  });
 
-    const payload = paymentData?.orderPayload || paymentData;
-
-    const response = await fetch(`${endpoint.VERIFY_PAYMENT}`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify(payload)
-    });
-
-    const resultData = await response.json();
-
-    if (!response.ok) {
-      return { success: false, error: resultData.message || 'Order verification failed.' };
-    }
-
-    return { success: true, ...resultData };
-  } catch (error) {
-    console.error("Server Action VerifyOrder Error:", error);
-    return { success: false, error: 'Internal server error. Please try again.' };
+  if (!result.success) {
+    return { success: false, error: result.error || "Order verification failed." };
   }
+
+  return { success: true, ...result.data };
 }
-
-

@@ -42,8 +42,8 @@ export default function CheckoutModal({ isOpen, onClose, cartData, onSuccess }) 
 
       const options = {
         key: orderInit.keyId || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        amount: orderInit.order.amount,
-        currency: orderInit.order.currency,
+        cartData,
+        shippingFee:shippingFee,
         name: "Zoka Shop",
         description: "Complete your order purchase",
         order_id: orderInit.order.id,

@@ -31,13 +31,13 @@ export default function CartPage() {
     fetchCartData();
   }, []);
 
-  const handleQuantityChange = async (productId, currentQty, targetQty, stockLimit) => {
+  const handleQuantityChange = async (productId, targetQty, stockLimit) => {
     if (targetQty < 1) return;
     if (targetQty > stockLimit) {
       alert(`Only ${stockLimit} items available in stock.`);
       return;
     }
-
+    
     setUpdatingId(productId);
     const res = await UpdateCart(productId, targetQty);
     if (res?.success) {
@@ -47,7 +47,7 @@ export default function CartPage() {
     }
     setUpdatingId(null);
   };
-
+  
   const handleRemoveItem = async (productId) => {
     if (!confirm("Are you sure you want to remove this item from your bag?")) return;
     
@@ -60,7 +60,7 @@ export default function CartPage() {
     }
     setUpdatingId(null);
   };
-
+  
   const items = cart || [];
 
   const subtotal = items.reduce((acc, item) => {
@@ -141,7 +141,7 @@ export default function CartPage() {
 
                       <button 
                         onClick={() => handleRemoveItem(product._id)}
-                        className="text-neutral-400 hover:text-rose-600 transition p-1"
+                        className="text-neutral-400 hover:text-rose-600 transition p-1 cursor-pointer"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -157,7 +157,7 @@ export default function CartPage() {
                     <div className="flex items-center border border-neutral-200 rounded-lg overflow-hidden h-9">
                       <button 
                         onClick={() => handleQuantityChange(product._id, item.quantity, item.quantity - 1, product.stock)}
-                        className="px-3 bg-neutral-50 hover:bg-neutral-100 transition text-neutral-600 font-bold"
+                        className="px-3 cursor-pointer bg-neutral-50 hover:bg-neutral-100 transition text-neutral-600 font-bold"
                       >
                         -
                       </button>
@@ -166,7 +166,7 @@ export default function CartPage() {
                       </span>
                       <button 
                         onClick={() => handleQuantityChange(product._id, item.quantity, item.quantity + 1, product.stock)}
-                        className="px-3 bg-neutral-50 hover:bg-neutral-100 transition text-neutral-600 font-bold"
+                        className="px-3 cursor-pointer bg-neutral-50 hover:bg-neutral-100 transition text-neutral-600 font-bold"
                       >
                         +
                       </button>

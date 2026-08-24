@@ -18,7 +18,7 @@ const approve_user= async(req,res)=>{
         }
         user.status = "approved";
         if(user.role !== "delivery"){
-          user.role = vendor
+          user.role = "vendor"
         }
         await user.save();
         res.status(200).json({ message: "user application approved" });

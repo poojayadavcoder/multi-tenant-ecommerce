@@ -62,7 +62,7 @@ export const removeCartItem = async (req, res) => {
             { $pull: { items: { productId } } },
             { new: true }
         ).populate("items.productId");
-
+        
         if (!deletedCartItem) {
             return res.status(404).json({ message: "Item not found in cart" });
         }
