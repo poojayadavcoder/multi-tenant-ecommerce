@@ -31,6 +31,7 @@ export default function LoginPage() {
       setError(null);
       setIsLoading(true);
       try {
+        console.log("hii")
         const result = await loginUser(values);
         if (result.success) {
           router.push('/dashboard');
