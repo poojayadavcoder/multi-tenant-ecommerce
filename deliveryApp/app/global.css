@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: 16 185 129;      /* Emerald Green (#10B981 / #00B976) */
+  --color-primary-dark: 5 150 105; /* Darker Green for press state */
+  --color-dark: 15 23 42;          /* Slate Dark (#0F172A) */
+  --color-light-bg: 248 250 252;  /* Light background slate */
+}
