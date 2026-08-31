@@ -41,6 +41,7 @@ export default function ProductsPage() {
     try {
       setLoading(true);
       const result = await VendorProducts();
+      
       if (result.success) setProducts(result.products || []);
       else setError(result.error || "Failed to load products.");
     } catch {

@@ -20,9 +20,11 @@ export default function CartPage() {
       if (res?.success) {
         setCart(res.product?.items || []);
       }
-    } catch (err) {
+    } 
+    catch (err) {
       console.error("Error loading cart:", err);
-    } finally {
+    } 
+    finally {
       setLoading(false);
     }
   };
@@ -70,7 +72,7 @@ export default function CartPage() {
 
   const totalQuantity = items.reduce((acc, item) => acc + item.quantity, 0);
 
-  const shippingFee = subtotal > 500 || subtotal === 0 ? 0 : 50;
+  const shippingFee = (subtotal <= 1000 || subtotal === 0) ? 0 : 50;
   const orderTotal = subtotal + shippingFee;
 
   if (loading && !cart) {

@@ -45,6 +45,7 @@ export default function ProductFormModal({ isOpen, onClose, product, onSuccess }
         formData.append('price', values.price);
         formData.append('stock', values.stock);
         formData.append('category', values.category);
+      
 
         // Append new images
         const newFiles = values.images.filter(img => img.type === 'new');
@@ -55,6 +56,7 @@ export default function ProductFormModal({ isOpen, onClose, product, onSuccess }
           .filter(img => img.type === 'existing')
           .map(img => img.url);
         existingImageUrls.forEach(url => formData.append('images', url));
+         console.log([...formData.entries()]);
 
         let res;
         if (isEdit) {

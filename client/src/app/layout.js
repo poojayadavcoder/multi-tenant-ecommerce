@@ -11,7 +11,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="min-h-full flex flex-col">
         {children}
-        <Script src="https://checkout.razorpay.com/v1/checkout.js" />
+        {/* <Script src="https://checkout.razorpay.com/v1/checkout.js" /> */}
       </body>
     </html>
   );

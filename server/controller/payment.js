@@ -11,23 +11,38 @@ const razorpay = new Razorpay({
 
 export const createPaymentOrder = async (req, res) => {
   try {
-    const { shippingFee ,cartData } = req.body;
-    console.log(shippingFee)
-    console.log(cartData)
+    const userId = req.user.id;
+    const cartData = await Cart.findOne({ userId }).populate("items.productId");
+    
+    if (!cartData || !cartData.items || cartData.items.length === 0) {
+      return res.status(400).json({ success: false, message: "Cart is empty" });
+    }
 
+    let calculatedTotal = 0;
+    for (const item of cartData.items) {
+      if (item.productId) {
+        const price = item.productId.price || 0;
+        calculatedTotal += price * item.quantity;
+      }
+    }
+    
+    const shippingFee = (calculatedTotal >= 1000 || calculatedTotal === 0) ? 0 : 50;
+    const totalAmount = calculatedTotal + shippingFee;
+    console.log("totalAmount",totalAmount)
     const options = {
-      amount: Math.round(amount * 100),
+      amount: Math.round(totalAmount * 100),
       currency: "INR",
-      receipt: `receipt_${Date.now()}`,
     };
-
+      
     const order = await razorpay.orders.create(options);
     console.log(order)
+    
     res.status(200).json({
       success: true,
       order,
       keyId: process.env.RAZORPAY_KEY_ID
     });
+  
   } catch (error) {
     console.error("Error creating Razorpay order:", error);
     res.status(500).json({ success: false, message: "Could not initiate payment" });

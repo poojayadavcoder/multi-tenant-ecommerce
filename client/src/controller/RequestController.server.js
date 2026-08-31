@@ -13,8 +13,10 @@ export async function request(url, method = "GET", options = {}) {
     const cookieStore = await cookies();
     const token = cookieStore.get("accessToken")?.value;
 
+    const isFormData = typeof FormData !== "undefined" && options.body instanceof FormData;
+
     const requestHeaders = {
-      "Content-Type": "application/json",
+      ...(!isFormData && { "Content-Type": "application/json" }),
       ...options.headers,
     };
 
@@ -25,7 +27,13 @@ export async function request(url, method = "GET", options = {}) {
     const res = await fetch(url, {
       method,
       headers: requestHeaders,
-      body: options.body ? JSON.stringify(options.body) : undefined,
+      body: options.body
+        ? isFormData
+          ? options.body
+          : typeof options.body === "string"
+            ? options.body
+            : JSON.stringify(options.body)
+        : undefined,
       cache: options.cache,
       next: options.next,
     });

@@ -14,7 +14,6 @@ export default function OrdersPage() {
         setLoading(true);
         const res = await GetOrderForCustomer();
         
-        // Robust payload extraction across common API response formats
         let orderData = [];
         if (Array.isArray(res)) {
           orderData = res;

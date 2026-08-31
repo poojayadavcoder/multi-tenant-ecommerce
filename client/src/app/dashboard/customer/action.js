@@ -108,16 +108,10 @@ export async function GetOrderForVendor() {
   return { success: true, product: result.data?.product || result.data };
 }
 
-export async function CreateOrder(amountPayload) {
+export async function CreateOrder() {
   const endpoint = Endpoints();
-  const amount =
-    typeof amountPayload === "object"
-      ? amountPayload?.amount || amountPayload?.payload
-      : amountPayload;
 
-  const result = await request(endpoint.CREATE_ORDER, "POST", {
-    body: { amount },
-  });
+  const result = await request(endpoint.CREATE_ORDER, "POST");
 
   if (!result.success) {
     return { success: false, error: result.error || "Failed to initiate payment." };

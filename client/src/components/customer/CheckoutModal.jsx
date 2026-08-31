@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CreateOrder, VerifyOrder } from '../../app/dashboard/customer/action';
 
@@ -9,13 +9,23 @@ export default function CheckoutModal({ isOpen, onClose, cartData, onSuccess }) 
   const [shippingAddress, setShippingAddress] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
+  const [cachedOrder, setCachedOrder] = useState(null);
   if (!isOpen) return null;
-
+  
   const subtotal = cartData?.subtotal || 0;
   const shippingFee = cartData?.shippingFee || 0;
   const total = cartData?.total || subtotal + shippingFee;
   const itemCount = cartData?.itemCount || 0;
+
+   useEffect(()=>{
+    const razorpayScript =document.querySelector("#razorpay_script")
+    if(razorpayScript) return
+    const script = document.createElement("script")
+    script.src = "https://checkout.razorpay.com/v1/checkout.js"
+    script.async = true
+    script.id = "razorpay_script"
+    document.body.appendChild(script)
+  },[])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,39 +35,46 @@ export default function CheckoutModal({ isOpen, onClose, cartData, onSuccess }) 
     setLoading(true);
 
     try {
+        let orderData = cachedOrder;
+
       if (typeof window === 'undefined' || !window.Razorpay) {
         setErrorMessage('Razorpay SDK failed to load. Please refresh the page and try again.');
         setLoading(false);
         return;
       }
-
-      const orderInit = await CreateOrder(total); 
-      console.log(orderInit)
-
+      if (!orderData) {
+        const orderInit = await CreateOrder(); 
       if (!orderInit?.success || !orderInit?.order) {
         setErrorMessage(orderInit?.error || 'Failed to initiate payment.');
         setLoading(false);
         return;
       }
-
+       orderData = orderInit;
+      setCachedOrder(orderInit);
+      }
+       
       const options = {
-        key: orderInit.keyId || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        key: orderData.keyId || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         cartData,
         shippingFee:shippingFee,
         name: "Zoka Shop",
         description: "Complete your order purchase",
-        order_id: orderInit.order.id,
-
+        order_id: orderData.order.id,
+        theme: {
+          color: '#00B976',
+        },
+        
         handler: async function (response) {
-
+           
           const result = await VerifyOrder({
             razorpay_order_id: response.razorpay_order_id,
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_signature: response.razorpay_signature,
             shippingAddress: shippingAddress,
           });
-
+          
           if (result.success) {
+            setCachedOrder(null); 
             onSuccess?.();
             router.push('/dashboard/customer/order');
           } else {
@@ -69,9 +86,6 @@ export default function CheckoutModal({ isOpen, onClose, cartData, onSuccess }) 
           ondismiss: function () {
             setLoading(false);
           }
-        },
-        theme: {
-          color: '#00B976',
         },
       };
 

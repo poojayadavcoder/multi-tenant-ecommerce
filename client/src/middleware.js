@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
 import Endpoints from "./constant/apiRoutes";
 
-/**
- * Decodes JWT and checks if expired (Edge Runtime safe)
- */
 function isTokenExpired(token) {
   if (!token) return true;
   try {
@@ -12,21 +9,19 @@ function isTokenExpired(token) {
     const jsonPayload = JSON.parse(atob(base64));
 
     if (!jsonPayload.exp) return false;
-    // Expired if current time + 5s buffer exceeds exp
+
     return jsonPayload.exp * 1000 <= Date.now() + 5000;
   } catch (e) {
-    return true; // Malformed token treated as expired
+    return true;
   }
 }
 
-// Define protected and public auth routes
 const PROTECTED_ROUTES = ["/dashboard", "/become-seller", "/cart", "/orders", "/checkout"];
 const AUTH_ROUTES = ["/auth/login", "/auth/register"];
 
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
 
-  // 1. Skip static assets, images, and internal Next.js paths
   if (
     pathname.startsWith("/_next") ||
     pathname.includes(".") ||
@@ -35,7 +30,6 @@ export async function middleware(request) {
     return NextResponse.next();
   }
 
-  // Prevent infinite loop on token refresh requests
   if (pathname.includes("/refresh")) {
     return NextResponse.next();
   }
@@ -46,7 +40,6 @@ export async function middleware(request) {
   const isProtectedRoute = PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
   const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
 
-  // 2. IMMEDIATE REDIRECT: If accessing a protected route without ANY tokens, redirect to login instantly
   if (isProtectedRoute && !token && !refreshToken) {
     console.log(`[Middleware] No tokens found for protected route: ${pathname}. Immediate redirect.`);
     return NextResponse.redirect(new URL("/auth/login", request.url));
@@ -54,7 +47,6 @@ export async function middleware(request) {
 
   const tokenExpired = isTokenExpired(token);
 
-  // 3. REFRESH TOKEN FLOW: If access token is expired/missing BUT refresh token exists
   if ((!token || tokenExpired) && refreshToken) {
     console.log("[Middleware] Access token missing or expired. Attempting refresh...");
 
@@ -85,7 +77,7 @@ export async function middleware(request) {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "strict",
-          maxAge: 60, // 1 min (or match backend)
+          maxAge: 60,
           path: "/",
         });
 
@@ -97,7 +89,6 @@ export async function middleware(request) {
           path: "/",
         });
 
-        // If user was heading to login page with a now-refreshed token, send to dashboard
         if (isAuthRoute) {
           return NextResponse.redirect(new URL("/dashboard", request.url));
         }
@@ -115,15 +106,13 @@ export async function middleware(request) {
     }
   }
 
-  // 4. CHECK PROTECTED ROUTES: If token refresh failed or token is still invalid
   if (isProtectedRoute && (!token || isTokenExpired(token))) {
     console.log(`[Middleware] Unauthorized access to ${pathname}. Redirecting to login.`);
     const loginUrl = new URL("/auth/login", request.url);
-    loginUrl.searchParams.set("callbackUrl", pathname); // Optional: remember where user was heading
+    loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // 5. CHECK AUTH ROUTES: If user is logged in, prevent them from accessing login/register pages
   if (isAuthRoute && token && !isTokenExpired(token)) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
