@@ -4,70 +4,199 @@ const ShippingPolicy = () => {
   const lastUpdated = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
   });
 
   return (
     <div className="bg-gray-50 min-h-screen py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 bg-white shadow-sm rounded-lg p-8 md:p-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Shipping Policy</h1>
-        <p className="text-sm text-gray-500 mb-8">Last Updated: {lastUpdated}</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-6">
+          Shipping Policy
+        </h1>
+
+        <p className="text-sm text-gray-500 mb-8">
+          Last Updated: {lastUpdated}
+        </p>
 
         <div className="space-y-8 text-gray-600 leading-relaxed">
+
+          {/* 1. Introduction */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">1. Order Processing Time</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              1. Introduction
+            </h2>
+
             <p>
-              All orders are processed within 1 to 3 business days (excluding weekends and holidays) after receiving your order confirmation email. You will receive another notification when your order has shipped. 
-              Please note that there may be potential delays due to a high volume of orders or postal service problems that are outside of our control.
+              At Zoka Market, we aim to provide a reliable and convenient
+              delivery experience. This Shipping Policy explains how orders
+              placed through our website are processed and delivered.
             </p>
           </section>
 
+          {/* 2. Order Processing */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">2. Shipping Rates and Delivery Estimates</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              2. Order Processing
+            </h2>
+
+            <p>
+              Orders are processed after successful order confirmation and
+              payment verification, where applicable.
+            </p>
+
+            <p className="mt-4">
+              Processing time may vary depending on product availability,
+              order details, and other operational factors. Orders may take
+              additional time during weekends, public holidays, or periods of
+              high order volume.
+            </p>
+          </section>
+
+          {/* 3. Delivery Address */}
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              3. Delivery Address
+            </h2>
+
+            <p>
+              Customers are responsible for providing a complete and accurate
+              delivery address, including the recipient's name, phone number,
+              address, city, state, and postal code where required.
+            </p>
+
+            <p className="mt-4">
+              Zoka Market may not be responsible for delivery delays or failed
+              deliveries caused by incorrect or incomplete information provided
+              by the customer.
+            </p>
+          </section>
+
+          {/* 4. Shipping Charges */}
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              4. Shipping Charges
+            </h2>
+
+            <p>
+              Any applicable shipping charges will be displayed to the
+              customer during the ordering or checkout process before the
+              order is confirmed.
+            </p>
+
+            <p className="mt-4">
+              Shipping charges may vary depending on the order, delivery
+              location, product, or applicable delivery conditions.
+            </p>
+          </section>
+
+          {/* 5. Delivery Time */}
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              5. Delivery Time
+            </h2>
+
+            <p>
+              Estimated delivery time may vary depending on the delivery
+              location, product availability, shipping method, and logistics
+              conditions.
+            </p>
+
+            <p className="mt-4">
+              Delivery timelines are estimates and may be affected by
+              circumstances outside our reasonable control, including
+              transportation delays, weather conditions, public holidays,
+              operational issues, or other unforeseen events.
+            </p>
+          </section>
+
+          {/* 6. Order Tracking */}
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              6. Order Tracking
+            </h2>
+
+            <p>
+              Where tracking information is available, customers may receive
+              order or delivery updates through the contact information
+              provided during checkout.
+            </p>
+          </section>
+
+          {/* 7. Failed Delivery */}
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              7. Failed or Delayed Delivery
+            </h2>
+
             <p className="mb-4">
-              Shipping charges for your order will be calculated and displayed at checkout. Delivery delays can occasionally occur.
+              A delivery may be delayed or unsuccessful due to circumstances
+              such as:
             </p>
+
             <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Standard Shipping:</strong> 3-5 business days.</li>
-              <li><strong>Express Shipping:</strong> 1-2 business days.</li>
-              <li><strong>International Shipping:</strong> 7-14 business days (varies by country).</li>
+              <li>Incorrect or incomplete delivery information.</li>
+              <li>Customer unavailable at the delivery address.</li>
+              <li>Courier or logistics delays.</li>
+              <li>Adverse weather or unforeseen circumstances.</li>
+              <li>Product availability or operational issues.</li>
             </ul>
           </section>
 
+          {/* 8. Damaged Package */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">3. International Shipping</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              8. Damaged or Incorrect Product
+            </h2>
+
             <p>
-              We offer international shipping to most countries. Your order may be subject to import duties and taxes (including VAT), which are incurred once a shipment reaches your destination country. 
-              Zoka Market is not responsible for these charges if they are applied and are your responsibility as the customer.
+              If you receive a damaged, defective, or incorrect product,
+              please contact us as soon as possible with your order details
+              and relevant information. We will review the issue and provide
+              an appropriate resolution according to our Refund &
+              Cancellation Policy.
             </p>
           </section>
 
+          {/* 9. Delivery Locations */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">4. How Do I Check the Status of My Order?</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              9. Delivery Locations
+            </h2>
+
             <p>
-              When your order has shipped, you will receive an email notification from us which will include a tracking number you can use to check its status. Please allow 48 hours for the tracking information to become available. 
-              If you haven't received your order within the estimated delivery time, please contact us with your name and order number.
+              Delivery availability depends on the serviceable locations
+              supported by our delivery arrangements. Delivery availability
+              and applicable charges, where relevant, may be determined during
+              the ordering process.
             </p>
           </section>
 
+          {/* 10. Contact */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">5. Damages</h2>
-            <p>
-              Zoka Market is not liable for any products damaged or lost during shipping. If you received your order damaged, please contact the shipment carrier to file a claim. 
-              Please save all packaging materials and damaged goods before filing a claim.
-            </p>
-          </section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              10. Contact Us
+            </h2>
 
-          <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">6. Contact Us</h2>
             <p>
-              If you have any further questions about our shipping policy, please contact us:
+              If you have any questions regarding shipping or delivery, please
+              contact us:
             </p>
+
             <ul className="mt-4 space-y-2">
-              <li><strong>Email address:</strong> py5825590@gmail.com</li>
-              <li><strong>Phone number:</strong> +91 7410903250</li>
+              <li>
+                <strong>Email:</strong> py5825590@gmail.com
+              </li>
+
+              <li>
+                <strong>Phone:</strong> +91 7410903250
+              </li>
+
+              <li>
+                <strong>Address:</strong> Jaipur, Rajasthan, India
+              </li>
             </ul>
           </section>
+
         </div>
       </div>
     </div>
