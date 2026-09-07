@@ -200,24 +200,24 @@ export default function CartPage() {
               </div>
               <div className="flex justify-between">
                 <span>Shipping Fee</span>
-                {shippingFee === 0 ? (
+                {subtotal>= 1000 ? (
                   <span className="text-emerald-600 font-semibold uppercase text-xs">Free</span>
                 ) : (
-                  <span className="font-semibold text-neutral-900">₹{shippingFee.toFixed(2)}</span>
+                  <span className="font-semibold text-neutral-900">₹50</span>
                 )}
               </div>
             </div>
 
             <div className="flex justify-between items-center py-5 mb-5">
               <span className="text-base font-bold text-neutral-900">Order Total</span>
-              <span className="text-xl font-black text-neutral-900">₹{orderTotal.toFixed(2)}</span>
+              <span className="text-xl font-black text-neutral-900">₹{(subtotal+(subtotal>=1000?0:50)).toFixed(2)}</span>
             </div>
 
-            {subtotal < 500 && (
+            {/* {subtotal < 500 && (
               <p className="text-[11px] text-neutral-500 mb-5 text-center leading-relaxed">
                 Add <span className="font-bold text-emerald-600">₹{(500 - subtotal).toFixed(2)}</span> more to unlock <span className="font-bold text-emerald-600">Free Shipping</span>!
               </p>
-            )}
+            )} */}
 
             <button
               className="w-full bg-[#00b574] hover:bg-[#009e65] text-white font-semibold py-3.5 rounded-xl transition text-center block text-sm shadow-xs select-none cursor-pointer"

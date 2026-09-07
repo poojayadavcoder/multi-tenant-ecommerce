@@ -148,13 +148,13 @@ export default function CheckoutModal({ isOpen, onClose, cartData, onSuccess }) 
             <div className="flex justify-between items-center">
               <span>Shipping Fee</span>
               <span className="font-bold text-[#00B976]">
-                {shippingFee === 0 ? 'FREE' : `₹${shippingFee.toFixed(2)}`}
+                {subtotal>= 1000 ? 'FREE' : `₹50`}
               </span>
             </div>
 
             <div className="border-t border-slate-200 pt-2 flex justify-between items-center text-sm font-bold text-slate-900">
               <span>Total Payable</span>
-              <span className="text-[#00B976]">₹{total.toFixed(2)}</span>
+              <span className="text-[#00B976]">₹{(subtotal+(subtotal>=1000?0:50)).toFixed(2)}</span>
             </div>
           </div>
 
