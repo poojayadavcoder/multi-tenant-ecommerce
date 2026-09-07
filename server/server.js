@@ -22,7 +22,7 @@ app.use(cookieParser());
 if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
-
+console.log(JSON.stringify(process.env.MONGO_URI))
 app.use("/api/auth", router);
 app.use("/api/products", productRoutes);
 app.use("/api/admin", adminRoutes);

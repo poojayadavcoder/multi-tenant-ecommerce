@@ -1,10 +1,11 @@
 import Products from '../../../components/customer/Products'
+import Footer from '../../../components/customer/Footer/Footer'
 export default function CustomerDashboardPage() {
   return (
-    <div className="relative min-h-[calc(100vh-73px)] w-full bg-white flex flex-col justify-start px-6 md:px-16 py-15 selection:bg-[#10B981]/25 select-none">
+    <div className="relative min-h-[calc(100vh-73px)] w-full bg-white flex flex-col justify-start selection:bg-[#10B981]/25 select-none">
       <div className="absolute top-1/4 left-1/3 -translate-x-1/2 -translate-y-1/2 w-87.5 h-87.5 bg-emerald-100/10 rounded-full blur-[100px] pointer-events-none"></div>
       
-      <div className="max-w-4xl relative z-10">
+      <div className="max-w-4xl relative z-10 px-4 md:px-12 py-5">
         <h1 className="text-[2.75rem] sm:text-[4.5rem] md:text-[3.5rem] font-bold tracking-tight leading-[1.05] text-neutral-900 mb-6 md:mb-8">
           <span className="block">Welcome to <span className="text-[#10B981]">Zoka Market.</span></span>
         </h1>
@@ -24,6 +25,7 @@ export default function CustomerDashboardPage() {
         </div>
       </div>
       <Products/>
+      <Footer/>
     </div>
   );
 }

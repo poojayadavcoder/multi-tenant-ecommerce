@@ -47,12 +47,6 @@ export default function Header() {
       <div className="flex items-center gap-8">
         <nav className="hidden md:flex items-center gap-6">
           <Link 
-            href="#" 
-            className="text-neutral-500 hover:text-neutral-950 font-medium text-sm transition-colors duration-200"
-          >
-            Collections
-          </Link>
-          <Link 
             href="/dashboard/customer/order" 
             className="text-neutral-500 hover:text-neutral-950 font-medium text-sm transition-colors duration-200"
           >

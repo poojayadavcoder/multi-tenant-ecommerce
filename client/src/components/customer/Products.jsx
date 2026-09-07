@@ -117,7 +117,7 @@ export default function Products() {
   }
 
   return (
-    <div className="w-full mt-12">
+    <div className="w-full mt-12 px-4 md:px-12 py-8">
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-xl font-bold text-neutral-900 tracking-tight">
           Our Collection
